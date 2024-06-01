@@ -8,6 +8,7 @@ body {
 
 .container {
     max-width: 600px;
+    height: 100vh;
     margin: auto;
     padding: 20px;
     background-color: white;
@@ -21,16 +22,32 @@ h1, h2 {
 
 .coin-container {
     position: relative;
+    margin-top: 50px;
 }
 
 #coin {
-    width: 100px;
+    width: 90%;
     cursor: pointer;
 }
 
 #coin-count {
-    font-size: 24px;
-    margin-top: 10px;
+    font-size: 48px;
+    font-weight: bold;
+}
+.counter {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+}
+.counter img {
+    width: 50px;
+}
+
+.footer {
+    width: 100%;
+    position: fixed;
+    bottom: 15px;
 }
 
 .energy-container {
