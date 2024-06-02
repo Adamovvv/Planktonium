@@ -94,7 +94,7 @@ main {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    margin-bottom: 34px;
+    margin-bottom: 34pt;
 }
 .footer-btns svg {
     display: flex;

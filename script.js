@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const FREEZE_DURATION = 3000; // 3 секунды
     const FALL_SPEED = 10; // Скорость падения элементов (в пикселях)
     const FALL_INTERVAL = 30; // Интервал обновления позиции падения элементов (в миллисекундах)
+    const ITEM_CREATION_INTERVAL = 500; // Интервал создания новых элементов (в миллисекундах)
 
     // Функция для генерации случайной строки
     function generateRandomString(length) {
@@ -125,51 +126,53 @@ document.addEventListener("DOMContentLoaded", () => {
         itemCreationInterval = setInterval(() => {
             if (isFrozen) return;
 
-            let item = document.createElement('div');
-            item.classList.add('falling-item');
+            for (let i = 0; i < 2; i++) { // Добавляем два элемента за раз
+                let item = document.createElement('div');
+                item.classList.add('falling-item');
 
-            let itemType = Math.random();
-            if (itemType < 0.8) {
-                item.classList.add('coin');
-            } else if (itemType < 0.9) {
-                item.classList.add('bomb');
-            } else {
-                item.classList.add('freeze');
-            }
+                let itemType = Math.random();
+                if (itemType < 0.8) {
+                    item.classList.add('coin');
+                } else if (itemType < 0.9) {
+                    item.classList.add('bomb');
+                } else {
+                    item.classList.add('freeze');
+                }
 
-            item.style.left = Math.random() * (gameArea.offsetWidth - 30) + 'px';
-            item.style.top = '0px';
-            gameArea.appendChild(item);
+                item.style.left = Math.random() * (gameArea.offsetWidth - 30) + 'px';
+                item.style.top = '0px';
+                gameArea.appendChild(item);
 
-            let fallInterval = setInterval(() => {
-                if (isFrozen) return;
+                let fallInterval = setInterval(() => {
+                    if (isFrozen) return;
 
-                let top = parseInt(item.style.top || 0);
-                top += FALL_SPEED; // Увеличена скорость падения
-                item.style.top = top + 'px';
+                    let top = parseInt(item.style.top || 0);
+                    top += FALL_SPEED; // Увеличена скорость падения
+                    item.style.top = top + 'px';
 
-                if (top >= gameArea.offsetHeight - 30) {
-                    clearInterval(fallInterval);
+                    if (top >= gameArea.offsetHeight - 30) {
+                        clearInterval(fallInterval);
+                        gameArea.removeChild(item);
+                    }
+                }, FALL_INTERVAL); // Уменьшен интервал обновления позиции
+
+                itemIntervals.push({ element: item, interval: fallInterval });
+
+                item.addEventListener('click', () => {
+                    if (item.classList.contains('coin')) {
+                        gameCoinCount++;
+                        gameCoinCountElem.innerText = gameCoinCount;
+                    } else if (item.classList.contains('bomb')) {
+                        gameCoinCount = 0;
+                        gameCoinCountElem.innerText = gameCoinCount;
+                        alert('Boom! You lost all coins collected in this game.');
+                    } else if (item.classList.contains('freeze')) {
+                        freezeItems();
+                    }
                     gameArea.removeChild(item);
-                }
-            }, FALL_INTERVAL); // Уменьшен интервал обновления позиции
-
-            itemIntervals.push({ element: item, interval: fallInterval });
-
-            item.addEventListener('click', () => {
-                if (item.classList.contains('coin')) {
-                    gameCoinCount++;
-                    gameCoinCountElem.innerText = gameCoinCount;
-                } else if (item.classList.contains('bomb')) {
-                    gameCoinCount = 0;
-                    gameCoinCountElem.innerText = gameCoinCount;
-                    alert('Boom! You lost all coins collected in this game.');
-                } else if (item.classList.contains('freeze')) {
-                    freezeItems();
-                }
-                gameArea.removeChild(item);
-            });
-        }, 500);
+                });
+            }
+        }, ITEM_CREATION_INTERVAL); // Уменьшен интервал создания новых элементов
     }
 
     // Функция заморозки элементов
