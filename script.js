@@ -195,37 +195,90 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Функция заморозки элементов
-    function freezeItems() {
-        isFrozen = true;
-        clearInterval(itemCreationInterval);
-        itemIntervals.forEach(({ interval }) => clearInterval(interval));
+   function freezeItems() {
+    isFrozen = true;
+    clearInterval(itemCreationInterval);
+    itemIntervals.forEach(({ interval }) => clearInterval(interval));
 
-        setTimeout(() => {
-            isFrozen = false;
-            // Возобновление движения элементов
-            const newIntervals = [];
-            itemIntervals.forEach(({ element }) => {
-                let fallInterval = setInterval(() => {
-                    if (isFrozen) return;
+    setTimeout(() => {
+        isFrozen = false;
 
-                    let top = parseInt(element.style.top || 0);
-                    top += FALL_SPEED; // Увеличена скорость падения
-                    element.style.top = top + 'px';
+        // Возобновление движения элементов
+        const newIntervals = [];
+        itemIntervals.forEach(({ element }) => {
+            let fallInterval = setInterval(() => {
+                if (isFrozen) return;
 
-                    if (top >= gameArea.offsetHeight - 30) {
-                        clearInterval(fallInterval);
-                        gameArea.removeChild(element);
+                let top = parseInt(element.style.top || 0);
+                top += FALL_SPEED; // Увеличена скорость падения
+                element.style.top = top + 'px';
+
+                if (top >= gameArea.offsetHeight - 30) {
+                    clearInterval(fallInterval);
+                    gameArea.removeChild(element);
+                }
+            }, FALL_INTERVAL); // Уменьшен интервал обновления позиции
+
+            newIntervals.push({ element, interval: fallInterval });
+        });
+        itemIntervals = newIntervals;
+
+        // Продолжение создания новых падающих элементов
+        if (!isFrozen) { // Убедимся, что создание новых элементов не начинается, пока они заморожены
+            itemCreationInterval = setInterval(() => {
+                if (isFrozen) return;
+
+                for (let i = 0; i < 2; i++) { // Добавляем два элемента за раз
+                    let item = document.createElement('div');
+                    item.classList.add('falling-item');
+
+                    let itemType = Math.random();
+                    if (itemType < 0.8) {
+                        item.classList.add('coin');
+                    } else if (itemType < 0.9) {
+                        item.classList.add('bomb');
+                    } else {
+                        item.classList.add('freeze');
                     }
-                }, FALL_INTERVAL); // Уменьшен интервал обновления позиции
 
-                newIntervals.push({ element, interval: fallInterval });
-            });
-            itemIntervals = newIntervals;
+                    item.style.left = Math.random() * (gameArea.offsetWidth - 30) + 'px';
+                    item.style.top = '0px';
+                    gameArea.appendChild(item);
 
-            // Продолжение создания новых падающих элементов
-            createFallingItems();
-        }, FREEZE_DURATION);
-    }
+                    let fallInterval = setInterval(() => {
+                        if (isFrozen) return;
+
+                        let top = parseInt(item.style.top || 0);
+                        top += FALL_SPEED; // Увеличена скорость падения
+                        item.style.top = top + 'px';
+
+                        if (top >= gameArea.offsetHeight - 30) {
+                            clearInterval(fallInterval);
+                            gameArea.removeChild(item);
+                        }
+                    }, FALL_INTERVAL); // Уменьшен интервал обновления позиции
+
+                    itemIntervals.push({ element: item, interval: fallInterval });
+
+                    item.addEventListener('click', () => {
+                        if (item.classList.contains('coin')) {
+                            gameCoinCount++;
+                            gameCoinCountElem.innerText = gameCoinCount;
+                        } else if (item.classList.contains('bomb')) {
+                            gameCoinCount = 0;
+                            gameCoinCountElem.innerText = gameCoinCount;
+                            alert('Boom! You lost all coins collected in this game.');
+                        } else if (item.classList.contains('freeze')) {
+                            freezeItems();
+                        }
+                        gameArea.removeChild(item);
+                    });
+                }
+            }, ITEM_CREATION_INTERVAL); // Уменьшен интервал создания новых элементов
+        }
+    }, FREEZE_DURATION);
+}
+
 
     // Функция начала фарминга
     function startFarming() {
