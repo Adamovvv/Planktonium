@@ -66,30 +66,46 @@ main {
     border: 2px solid black;
 }
 
+@keyframes fall {
+    from {
+        top: 0;
+    }
+    to {
+        top: 100vh;
+    }
+}
+
 .falling-item {
     position: absolute;
+    animation: fall linear forwards;
+}
+
+.frozen {
+    animation-play-state: paused;
 }
 
 .coin {
-    background-image: url(coin.png);
+    background-image: url('coin.png');
     width: 50px;
     height: 50px;
     background-size: cover;
 }
 
 .bomb {
-    background-image: url(bomb.png);
+    background-image: url('bomb.png');
     width: 50px;
     height: 50px;
     background-size: cover;
 }
 
 .freeze {
-    background-image: url(snowflake.png);
+    background-image: url('snowflake.png');
     width: 50px;
     height: 50px;
     background-size: cover;
 }
+
+
 .footer-btns {
     display: flex;
     justify-content: space-around;

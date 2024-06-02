@@ -1,9 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Инициализация Telegram Web Apps SDK
     const tg = window.Telegram.WebApp;
-    tg.expand(); // Включить полноэкранный режим
+    tg.expand();
 
-    // Установка информации о пользователе
     const user = tg.initDataUnsafe.user;
     if (user) {
         const userAvatarElem = document.getElementById('user-avatar');
@@ -12,25 +10,21 @@ document.addEventListener("DOMContentLoaded", () => {
         if (user.photo_url) {
             userAvatarElem.style.backgroundImage = `url(${user.photo_url})`;
         } else {
-            userAvatarElem.style.backgroundImage = `url('default-avatar.png')`; // Путь к аватару по умолчанию
+            userAvatarElem.style.backgroundImage = `url('default-avatar.png')`;
         }
 
         usernameElem.innerText = user.first_name;
     }
 
-    // Инициализация переменных
-    let coinCount = parseInt(localStorage.getItem('coinCount')) || 0; // Количество монет
-    let attemptsCount = parseInt(localStorage.getItem('attemptsCount')) || 3; // Количество попыток
-    let lastAttemptUpdate = parseInt(localStorage.getItem('lastAttemptUpdate')) || Date.now(); // Время последнего обновления попыток
-    let farmingProfit = parseFloat(localStorage.getItem('farmingProfit')) || 0; // Прибыль от фарминга
-    let farmingStartTime = parseInt(localStorage.getItem('farmingStartTime')) || null; // Время начала фарминга
-    const FARMING_DURATION = 43200; // 12 часов в секундах
-    const FREEZE_DURATION = 3000; // 3 секунды
-    const FALL_SPEED = 10; // Скорость падения элементов (в пикселях)
-    const FALL_INTERVAL = 30; // Интервал обновления позиции падения элементов (в миллисекундах)
-    const ITEM_CREATION_INTERVAL = 300; // Интервал создания новых элементов (в миллисекундах)
+    let coinCount = parseInt(localStorage.getItem('coinCount')) || 0;
+    let attemptsCount = parseInt(localStorage.getItem('attemptsCount')) || 3;
+    let lastAttemptUpdate = parseInt(localStorage.getItem('lastAttemptUpdate')) || Date.now();
+    let farmingProfit = parseFloat(localStorage.getItem('farmingProfit')) || 0;
+    let farmingStartTime = parseInt(localStorage.getItem('farmingStartTime')) || null;
+    const FARMING_DURATION = 43200;
+    const FREEZE_DURATION = 3000;
+    const ITEM_CREATION_INTERVAL = 300;
 
-    // Функция для генерации случайной строки
     function generateRandomString(length) {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         let result = '';
@@ -40,14 +34,12 @@ document.addEventListener("DOMContentLoaded", () => {
         return result;
     }
 
-    // Получение уникальной ссылки пользователя из localStorage или генерация новой
     let userReferralLink = localStorage.getItem('userReferralLink');
     if (!userReferralLink) {
         userReferralLink = `https://example.com/referral?user=${generateRandomString(10)}`;
         localStorage.setItem('userReferralLink', userReferralLink);
     }
 
-    // Элементы DOM
     const coinCountElem = document.getElementById('coin-count');
     const attemptsCountElem = document.getElementById('attempts-count');
     const farmingProfitElem = document.getElementById('farming-profit');
@@ -64,23 +56,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const copyLinkButton = document.getElementById('copy-link-button');
     const shareLinkButton = document.getElementById('share-link-button');
 
-    // Установка начальных значений в DOM
     if (coinCountElem) coinCountElem.innerText = coinCount;
     if (attemptsCountElem) attemptsCountElem.innerText = attemptsCount;
     if (referralLinkElem) referralLinkElem.innerText = userReferralLink;
 
-    let gameInterval; // Интервал игры
-    let farmingInterval; // Интервал фарминга
-    let itemIntervals = []; // Массив для хранения интервалов движения элементов
-    let itemCreationInterval; // Интервал создания новых элементов
-    let isFrozen = false; // Флаг состояния заморозки
-    let timeLeft = 20; // Оставшееся время игры
-    let gameCoinCount = 0; // Монеты, заработанные в игре
+    let gameInterval;
+    let itemCreationInterval;
+    let isFrozen = false;
+    let timeLeft = 20;
+    let gameCoinCount = 0;
+    let frozenItems = [];
 
-    // Функция для обновления попыток ежедневно
     function updateAttemptsDaily() {
         const currentTime = Date.now();
-        const oneDay = 24 * 60 * 60 * 1000; // Один день в миллисекундах
+        const oneDay = 24 * 60 * 60 * 1000;
 
         if (currentTime - lastAttemptUpdate >= oneDay) {
             attemptsCount += 5;
@@ -91,15 +80,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Обновляем попытки ежедневно при загрузке страницы
     updateAttemptsDaily();
 
-    // Обработчик нажатия кнопки "Play"
     if (playButton) playButton.addEventListener('click', startGame);
-    // Обработчик нажатия кнопки "Farming"
     if (farmingButton) farmingButton.addEventListener('click', startFarming);
 
-    // Функция начала игры
     function startGame() {
         if (attemptsCount > 0) {
             attemptsCount--;
@@ -120,6 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     if (timeLeft <= 0) {
                         clearInterval(gameInterval);
+                        clearInterval(itemCreationInterval);
                         mainContainer.classList.remove('hidden');
                         gameContainer.classList.add('hidden');
                         gameContainer.classList.remove('full-screen');
@@ -131,21 +117,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }, 1000);
 
-            // Создание падающих элементов
             createFallingItems();
         } else {
             alert('No attempts left!');
         }
     }
 
-    // Функция создания падающих элементов
     function createFallingItems() {
-        gameArea.innerHTML = ''; // Очистить предыдущие элементы
+        gameArea.innerHTML = '';
 
         itemCreationInterval = setInterval(() => {
             if (isFrozen) return;
 
-            for (let i = 0; i < 2; i++) { // Добавляем два элемента за раз
+            for (let i = 0; i < 2; i++) {
                 let item = document.createElement('div');
                 item.classList.add('falling-item');
 
@@ -158,24 +142,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     item.classList.add('freeze');
                 }
 
-                item.style.left = Math.random() * (gameArea.offsetWidth - 30) + 'px';
-                item.style.top = '0px';
+                item.style.left = Math.random() * (gameArea.offsetWidth - 50) + 'px';
+                item.style.animationDuration = (Math.random() * 3 + 2) + 's';
+
                 gameArea.appendChild(item);
-
-                let fallInterval = setInterval(() => {
-                    if (isFrozen) return;
-
-                    let top = parseInt(item.style.top || 0);
-                    top += FALL_SPEED; // Увеличена скорость падения
-                    item.style.top = top + 'px';
-
-                    if (top >= gameArea.offsetHeight - 30) {
-                        clearInterval(fallInterval);
-                        gameArea.removeChild(item);
-                    }
-                }, FALL_INTERVAL); // Уменьшен интервал обновления позиции
-
-                itemIntervals.push({ element: item, interval: fallInterval });
 
                 item.addEventListener('click', () => {
                     if (item.classList.contains('coin')) {
@@ -190,97 +160,44 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                     gameArea.removeChild(item);
                 });
+
+                item.addEventListener('animationend', () => {
+                    gameArea.removeChild(item);
+                });
             }
-        }, ITEM_CREATION_INTERVAL); // Уменьшен интервал создания новых элементов
+        }, ITEM_CREATION_INTERVAL);
     }
 
-    // Функция заморозки элементов
-   function freezeItems() {
-    isFrozen = true;
-    clearInterval(itemCreationInterval);
-    itemIntervals.forEach(({ interval }) => clearInterval(interval));
+    function freezeItems() {
+        isFrozen = true;
+        clearInterval(itemCreationInterval);
 
-    setTimeout(() => {
-        isFrozen = false;
-
-        // Возобновление движения элементов
-        const newIntervals = [];
-        itemIntervals.forEach(({ element }) => {
-            let fallInterval = setInterval(() => {
-                if (isFrozen) return;
-
-                let top = parseInt(element.style.top || 0);
-                top += FALL_SPEED; // Увеличена скорость падения
-                element.style.top = top + 'px';
-
-                if (top >= gameArea.offsetHeight - 30) {
-                    clearInterval(fallInterval);
-                    gameArea.removeChild(element);
-                }
-            }, FALL_INTERVAL); // Уменьшен интервал обновления позиции
-
-            newIntervals.push({ element, interval: fallInterval });
+        const items = document.querySelectorAll('.falling-item');
+        items.forEach(item => {
+            item.classList.add('frozen');
+            frozenItems.push({
+                element: item,
+                top: item.style.top,
+                left: item.style.left,
+                animationDuration: item.style.animationDuration
+            });
         });
-        itemIntervals = newIntervals;
 
-        // Продолжение создания новых падающих элементов
-        if (!isFrozen) { // Убедимся, что создание новых элементов не начинается, пока они заморожены
-            itemCreationInterval = setInterval(() => {
-                if (isFrozen) return;
+        setTimeout(() => {
+            isFrozen = false;
+            frozenItems.forEach(itemData => {
+                const item = itemData.element;
+                item.classList.remove('frozen');
+                item.style.top = itemData.top;
+                item.style.left = itemData.left;
+                item.style.animationDuration = itemData.animationDuration;
+                gameArea.appendChild(item);
+            });
+            frozenItems = [];
+            createFallingItems();
+        }, FREEZE_DURATION);
+    }
 
-                for (let i = 0; i < 2; i++) { // Добавляем два элемента за раз
-                    let item = document.createElement('div');
-                    item.classList.add('falling-item');
-
-                    let itemType = Math.random();
-                    if (itemType < 0.8) {
-                        item.classList.add('coin');
-                    } else if (itemType < 0.9) {
-                        item.classList.add('bomb');
-                    } else {
-                        item.classList.add('freeze');
-                    }
-
-                    item.style.left = Math.random() * (gameArea.offsetWidth - 30) + 'px';
-                    item.style.top = '0px';
-                    gameArea.appendChild(item);
-
-                    let fallInterval = setInterval(() => {
-                        if (isFrozen) return;
-
-                        let top = parseInt(item.style.top || 0);
-                        top += FALL_SPEED; // Увеличена скорость падения
-                        item.style.top = top + 'px';
-
-                        if (top >= gameArea.offsetHeight - 30) {
-                            clearInterval(fallInterval);
-                            gameArea.removeChild(item);
-                        }
-                    }, FALL_INTERVAL); // Уменьшен интервал обновления позиции
-
-                    itemIntervals.push({ element: item, interval: fallInterval });
-
-                    item.addEventListener('click', () => {
-                        if (item.classList.contains('coin')) {
-                            gameCoinCount++;
-                            gameCoinCountElem.innerText = gameCoinCount;
-                        } else if (item.classList.contains('bomb')) {
-                            gameCoinCount = 0;
-                            gameCoinCountElem.innerText = gameCoinCount;
-                            alert('Boom! You lost all coins collected in this game.');
-                        } else if (item.classList.contains('freeze')) {
-                            freezeItems();
-                        }
-                        gameArea.removeChild(item);
-                    });
-                }
-            }, ITEM_CREATION_INTERVAL); // Уменьшен интервал создания новых элементов
-        }
-    }, FREEZE_DURATION);
-}
-
-
-    // Функция начала фарминга
     function startFarming() {
         if (!farmingInterval && !farmingStartTime) {
             farmingStartTime = Math.floor(Date.now() / 1000);
@@ -291,7 +208,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Функция обновления фарминга
     function updateFarming() {
         const currentTime = Math.floor(Date.now() / 1000);
         const elapsedTime = currentTime - farmingStartTime;
@@ -320,14 +236,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Инициализация фарминга при загрузке страницы
     if (farmingStartTime) {
         farmingButton.disabled = true;
         updateFarming();
         farmingInterval = setInterval(updateFarming, 1000);
     }
 
-    // Обработчик задач
     const taskButtons = document.querySelectorAll('.task-button');
     taskButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -339,13 +253,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Обработчик для вкладки "Frens"
     if (referralLinkElem) {
         referralLinkElem.innerText = userReferralLink;
     }
 
     if (invitedUsersListElem) {
-        // Пример приглашенных пользователей
         const invitedUsers = ['user1', 'user2', 'user3'];
         invitedUsers.forEach(user => {
             const listItem = document.createElement('li');
@@ -354,7 +266,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Функция для копирования ссылки
     function copyToClipboard(text) {
         const tempInput = document.createElement('input');
         tempInput.value = text;
@@ -365,14 +276,12 @@ document.addEventListener("DOMContentLoaded", () => {
         alert('Link copied to clipboard');
     }
 
-    // Обработчик нажатия кнопки "Copy Link"
     if (copyLinkButton) {
         copyLinkButton.addEventListener('click', () => {
             copyToClipboard(userReferralLink);
         });
     }
 
-    // Обработчик нажатия кнопки "Share Link"
     if (shareLinkButton) {
         shareLinkButton.addEventListener('click', () => {
             if (navigator.share) {
