@@ -3,6 +3,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const tg = window.Telegram.WebApp;
     tg.expand(); // Включить полноэкранный режим
 
+    // Установка информации о пользователе
+    const user = tg.initDataUnsafe.user;
+    if (user) {
+        const userAvatarElem = document.getElementById('user-avatar');
+        const usernameElem = document.getElementById('username');
+
+        if (user.photo_url) {
+            userAvatarElem.style.backgroundImage = `url(${user.photo_url})`;
+        } else {
+            userAvatarElem.style.backgroundImage = `url('default-avatar.png')`; // Путь к аватару по умолчанию
+        }
+
+        usernameElem.innerText = user.first_name;
+    }
+
     // Инициализация переменных
     let coinCount = parseInt(localStorage.getItem('coinCount')) || 0; // Количество монет
     let attemptsCount = parseInt(localStorage.getItem('attemptsCount')) || 3; // Количество попыток
@@ -13,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const FREEZE_DURATION = 3000; // 3 секунды
     const FALL_SPEED = 10; // Скорость падения элементов (в пикселях)
     const FALL_INTERVAL = 30; // Интервал обновления позиции падения элементов (в миллисекундах)
-    const ITEM_CREATION_INTERVAL = 500; // Интервал создания новых элементов (в миллисекундах)
+    const ITEM_CREATION_INTERVAL = 300; // Интервал создания новых элементов (в миллисекундах)
 
     // Функция для генерации случайной строки
     function generateRandomString(length) {
