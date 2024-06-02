@@ -1,4 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // Инициализация Telegram Web Apps SDK
+    const tg = window.Telegram.WebApp;
+    tg.expand(); // Включить полноэкранный режим
+
     // Инициализация переменных
     let coinCount = parseInt(localStorage.getItem('coinCount')) || 0; // Количество монет
     let attemptsCount = parseInt(localStorage.getItem('attemptsCount')) || 3; // Количество попыток
