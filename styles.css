@@ -1,0 +1,204 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    color: #fff;
+    font-family: "Roboto";
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+header, footer {
+    flex: 0 0 auto;
+}
+
+main {
+    flex: 1;
+    margin: 15px;
+}
+
+.dashboard {
+    display: flex;
+    gap: 100px;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+}
+
+#game-container.full-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.hidden {
+    display: none;
+}
+
+#game-info {
+    width: 100%;
+    position: absolute;
+    top: 20px;
+    display: flex;
+    font-size: 24pt;
+    font-weight: bold;
+    justify-content: space-between;
+}
+
+#game-area {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+    border: 2px solid black;
+}
+
+.falling-item {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.coin {
+    background: gold;
+}
+
+.bomb {
+    background: red;
+}
+
+.freeze {
+    background: blue;
+}
+.footer-btns {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 34px;
+}
+.footer-btns svg {
+    display: flex;
+    margin: auto;
+    width: 24px;
+}
+.nav-button {
+    display: grid;
+    gap: 5px;
+    color: #fff;
+    text-decoration: none;
+}
+.coin-counter {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 54pt;
+}
+.rjaexqox {
+    width: 100%;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border: 1px solid #fff;
+    border-radius: 16px;
+}
+.izbxmkmr {
+    font-size: 24pt;
+}
+#play-button {
+    padding: 8px 24px;
+    background: #fff;
+    color: #000;
+    border: none;
+    border-radius: 2rem;
+    font-size: 12pt;
+    font-weight: bold;
+}
+#farming-button {
+    width: 100%;
+    border-radius: 8px;
+    padding: 20px 15px;
+    border: none;
+}
+#farming-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+}
+.mcsaornt {
+    display: grid;
+    gap: 10px;
+}
+.ngksrryd {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+}
+#attempts-count {
+    font-size: 18pt;
+}
+#game-timer {
+    padding: 5px 20px;
+    border: 1px solid gold;
+    border-radius: 2rem;
+}
+#game-coin-count {
+    font-size: 24pt;
+    font-weight: bold;
+}
+.tasks {
+    display: grid;
+    gap: 30px;
+}
+.task {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.task-button {
+    padding: 8px 24px;
+    background: #fff;
+    color: #000;
+    border: none;
+    border-radius: 2rem;
+    font-size: 12pt;
+    font-weight: bold;
+}
+#copy-link-button {
+    padding: 8px 24px;
+    background: #fff;
+    color: #000;
+    border: none;
+    border-radius: 2rem;
+    font-size: 12pt;
+    font-weight: bold;
+}
+#share-link-button {
+    padding: 8px 24px;
+    background: #fff;
+    color: #000;
+    border: none;
+    border-radius: 2rem;
+    font-size: 12pt;
+    font-weight: bold;
+}
+.mxaeddpm {
+    display: flex;
+    justify-content: space-around;
+}
