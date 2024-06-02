@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let farmingStartTime = parseInt(localStorage.getItem('farmingStartTime')) || null; // Время начала фарминга
     const FARMING_DURATION = 43200; // 12 часов в секундах
     const FREEZE_DURATION = 3000; // 3 секунды
+    const FALL_SPEED = 10; // Скорость падения элементов (в пикселях)
+    const FALL_INTERVAL = 30; // Интервал обновления позиции падения элементов (в миллисекундах)
 
     // Функция для генерации случайной строки
     function generateRandomString(length) {
@@ -87,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
             gameContainer.classList.remove('hidden');
             gameContainer.classList.add('full-screen');
             gameTimerElem.innerText = 20;
-            timeLeft = 2000;
+            timeLeft = 20;
             gameCoinCount = 0;
             gameCoinCountElem.innerText = gameCoinCount;
 
@@ -143,14 +145,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (isFrozen) return;
 
                 let top = parseInt(item.style.top || 0);
-                top += 5;
+                top += FALL_SPEED; // Увеличена скорость падения
                 item.style.top = top + 'px';
 
                 if (top >= gameArea.offsetHeight - 30) {
                     clearInterval(fallInterval);
                     gameArea.removeChild(item);
                 }
-            }, 50);
+            }, FALL_INTERVAL); // Уменьшен интервал обновления позиции
 
             itemIntervals.push({ element: item, interval: fallInterval });
 
@@ -185,14 +187,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (isFrozen) return;
 
                     let top = parseInt(element.style.top || 0);
-                    top += 5;
+                    top += FALL_SPEED; // Увеличена скорость падения
                     element.style.top = top + 'px';
 
                     if (top >= gameArea.offsetHeight - 30) {
                         clearInterval(fallInterval);
                         gameArea.removeChild(element);
                     }
-                }, 50);
+                }, FALL_INTERVAL); // Уменьшен интервал обновления позиции
 
                 newIntervals.push({ element, interval: fallInterval });
             });
