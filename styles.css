@@ -330,3 +330,12 @@ main {
     font-size: 14px;
     font-weight: bold;
 }
+#register-button {
+    padding: 8px 24px;
+    background: #fff;
+    color: #000;
+    border: none;
+    border-radius: 2rem;
+    font-size: 12pt;
+    font-weight: bold;
+}

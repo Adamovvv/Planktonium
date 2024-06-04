@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    const ADMIN_ID = '7065197387';  // Замените на ID администратора
+    const ADMIN_ID = 'your_admin_id';  // Замените на ID администратора
 
     const urlParams = new URLSearchParams(window.location.search);
     const inviteCode = urlParams.get('user');
