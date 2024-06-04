@@ -16,20 +16,23 @@ body, html {
 }
 
 footer {
-    flex: 0 0 auto;
+    flex-shrink: 0;
 }
 
 main {
-    flex: 1;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .dashboard {
+    flex-grow: 1;
     display: flex;
-    gap: 50px;
-    flex: 1;
     flex-direction: column;
-    padding: 15px;
+    justify-content: space-between;
     align-items: center;
+    padding: 15px;
 }
 
 #game-container.full-screen {
@@ -110,7 +113,7 @@ main {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    margin-bottom: 34pt;
+    margin-bottom: 34px;
 }
 .footer-btns svg {
     display: flex;
