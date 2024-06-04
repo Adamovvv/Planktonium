@@ -2,22 +2,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    const ADMIN_ID = 'your_admin_id';  // Замените на ID администратора
+    const ADMIN_ID = '7065197387';  // Замените на ID администратора
 
     const urlParams = new URLSearchParams(window.location.search);
     const inviteCode = urlParams.get('user');
 
-    const mainContainer = document.getElementById('main-container');
-    const errorMessage = document.getElementById('error-message');
-    const registrationForm = document.getElementById('registration-form');
-    const mainContent = document.getElementById('main-content');
-    const registerButton = document.getElementById('register-button');
-    const usernameInput = document.getElementById('username-input');
-
     const user = tg.initDataUnsafe.user;
 
     if (!inviteCode && user?.id !== ADMIN_ID) {
-        errorMessage.classList.remove('hidden');
+        window.location.href = 'error.html';
         return;
     }
 
@@ -30,23 +23,11 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem('user', JSON.stringify(user));
         showMainContent();
     } else {
-        registrationForm.classList.remove('hidden');
+        window.location.href = 'registration.html';
     }
 
-    registerButton.addEventListener('click', () => {
-        const username = usernameInput.value.trim();
-        if (username) {
-            const user = { username };
-            localStorage.setItem('user', JSON.stringify(user));
-            showMainContent();
-        } else {
-            alert('Please enter a username.');
-        }
-    });
-
     function showMainContent() {
-        registrationForm.classList.add('hidden');
-        mainContent.classList.remove('hidden');
+        document.getElementById('main-content').classList.remove('hidden');
 
         const user = JSON.parse(localStorage.getItem('user'));
         const userAvatarElem = document.getElementById('user-avatar');
@@ -129,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 attemptsCount--;
                 attemptsCountElem.innerText = attemptsCount;
                 localStorage.setItem('attemptsCount', attemptsCount);
-                mainContainer.classList.add('hidden');
+                document.getElementById('main-container').classList.add('hidden');
                 gameContainer.classList.remove('hidden');
                 gameContainer.classList.add('full-screen');
                 gameTimerElem.innerText = 20;
@@ -145,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         if (timeLeft <= 0) {
                             clearInterval(gameInterval);
                             clearInterval(itemCreationInterval);
-                            mainContainer.classList.remove('hidden');
+                            document.getElementById('main-container').classList.remove('hidden');
                             gameContainer.classList.add('hidden');
                             gameContainer.classList.remove('full-screen');
                             coinCount += gameCoinCount;
