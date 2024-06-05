@@ -357,7 +357,7 @@ main {
     font-size: 18px;
     font-weight: bold;
 }
-/* Добавьте эти стили в ваш styles.css */
+/* Модальные окна */
 .modal {
     position: fixed;
     top: 50%;

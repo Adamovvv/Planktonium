@@ -2,28 +2,41 @@ document.addEventListener("DOMContentLoaded", () => {
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    const ADMIN_ID = '7065197387';  // Замените на ID администратора
-
     const urlParams = new URLSearchParams(window.location.search);
     const inviteCode = urlParams.get('user');
 
     const user = tg.initDataUnsafe.user;
 
-    if (!inviteCode && (!user || user.id.toString() !== ADMIN_ID)) {
+    function generateRandomString(length) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
+    }
+
+    // Начальная проверка для создания ссылки для первого пользователя
+    if (!localStorage.getItem('firstUserReferralLink')) {
+        const firstUserReferralLink = `https://adamovvv.github.io/ArkanCoin/referral?user=${generateRandomString(10)}`;
+        localStorage.setItem('firstUserReferralLink', firstUserReferralLink);
+    }
+
+    const firstUserReferralLink = localStorage.getItem('firstUserReferralLink');
+
+    // Проверка условия для реферальной ссылки или доступа через Telegram бот
+    if (!inviteCode && (!user || !user.id)) {
         window.location.href = 'error.html';
         return;
     }
 
-    if (user && user.id.toString() === ADMIN_ID) {
-        showMainContent();
-        return;
+    if (inviteCode) {
+        window.location.href = 'registration.html';
     }
 
     if (user) {
         localStorage.setItem('user', JSON.stringify(user));
         showMainContent();
-    } else {
-        window.location.href = 'registration.html';
     }
 
     function showMainContent() {
@@ -49,15 +62,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const FARMING_PROFIT = 57.600;
         const FREEZE_DURATION = 3000;
         const ITEM_CREATION_INTERVAL = 300;
-
-        function generateRandomString(length) {
-            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            let result = '';
-            for (let i = 0; i < length; i++) {
-                result += characters.charAt(Math.floor(Math.random() * characters.length));
-            }
-            return result;
-        }
 
         let userReferralLink = localStorage.getItem('userReferralLink');
         if (!userReferralLink) {
@@ -230,7 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         function startFarming() {
-            if (!farmingInterval && !farmingStartTime) {
+            if (!farmingStartTime) {
                 farmingStartTime = Math.floor(Date.now() / 1000);
                 localStorage.setItem('farmingStartTime', farmingStartTime);
                 farmingButton.disabled = true;
@@ -307,7 +311,31 @@ document.addEventListener("DOMContentLoaded", () => {
             alert('Link copied to clipboard');
         }
 
+        if (copyLinkButton) {
+            copyLinkButton.addEventListener('click', () => {
+                copyToClipboard(userReferralLink);
+            });
+        }
+
+        if (shareLinkButton) {
+            shareLinkButton.addEventListener('click', () => {
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Join the Arcancoin Game!',
+                        text: 'Check out this amazing game and earn rewards!',
+                        url: userReferralLink
+                    }).catch(error => {
+                        console.error('Error sharing:', error);
+                    });
+                } else {
+                    alert('Sharing not supported on this browser');
+                }
+            });
+        }
+
         function openModal() {
+            const referralLinkModal = document.getElementById('referral-link-modal');
+            referralLinkModal.innerText = userReferralLink;
             modal.classList.remove('hidden');
         }
 
@@ -320,25 +348,33 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         function sendReferralLink() {
-            // Логика для отправки ссылки может быть добавлена здесь
-            alert('Referral link sent!');
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Join the Arcancoin Game!',
+                    text: 'Check out this amazing game and earn rewards!',
+                    url: userReferralLink
+                }).catch(error => {
+                    console.error('Error sharing:', error);
+                });
+            } else {
+                alert('Sharing not supported on this browser');
+            }
         }
 
-        function showEndGameModal(coins, attempts) {
+        function showEndGameModal(coinsCollected, remainingAttempts) {
             const endGameModal = document.getElementById('end-game-modal');
-            const endGameCoinsElem = document.getElementById('end-game-coins');
-            const endGameAttemptsElem = document.getElementById('end-game-attempts');
-            const endGamePlayAgainButton = document.getElementById('end-game-play-again');
+            const coinsCollectedElem = document.getElementById('coins-collected');
+            const remainingAttemptsElem = document.getElementById('remaining-attempts');
+            const playAgainButton = document.getElementById('play-again-button');
 
-            endGameCoinsElem.innerText = coins;
-            endGameAttemptsElem.innerText = attempts;
+            coinsCollectedElem.innerText = coinsCollected;
+            remainingAttemptsElem.innerText = remainingAttempts;
 
-            endGamePlayAgainButton.addEventListener('click', () => {
+            playAgainButton.addEventListener('click', () => {
                 endGameModal.classList.add('hidden');
                 startGame();
-            });
-
-            endGameModal.classList.remove('hidden');
+                });
+                endGameModal.classList.remove('hidden');
+            }
         }
-    }
-});
+    });        
