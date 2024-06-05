@@ -16,13 +16,11 @@ document.addEventListener("DOMContentLoaded", () => {
         return result;
     }
 
-    // Начальная проверка для создания ссылки для первого пользователя
-    if (!localStorage.getItem('firstUserReferralLink')) {
-        const firstUserReferralLink = `https://adamovvv.github.io/ArkanCoin/referral?user=${generateRandomString(10)}`;
-        localStorage.setItem('firstUserReferralLink', firstUserReferralLink);
+    // Проверка для первого пользователя
+    if (!localStorage.getItem('firstUserRegistered')) {
+        window.location.href = 'registration.html';
+        return;
     }
-
-    const firstUserReferralLink = localStorage.getItem('firstUserReferralLink');
 
     // Проверка условия для реферальной ссылки или доступа через Telegram бот
     if (!inviteCode && (!user || !user.id)) {
@@ -373,8 +371,9 @@ document.addEventListener("DOMContentLoaded", () => {
             playAgainButton.addEventListener('click', () => {
                 endGameModal.classList.add('hidden');
                 startGame();
-                });
-                endGameModal.classList.remove('hidden');
-            }
+            });
+
+            endGameModal.classList.remove('hidden');
         }
-    });        
+    }
+});
