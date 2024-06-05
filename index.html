@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blum App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Registration Page -->
+        <div id="registration" class="page">
+            <h1>Register</h1>
+            <input type="text" id="username" placeholder="Enter your username">
+            <button id="registerBtn">Register</button>
+        </div>
+
+        <!-- Main Page -->
+        <div id="main" class="page">
+            <div id="user-info">
+                <img id="user-avatar" src="" alt="User Avatar">
+                <h2 id="user-name"></h2>
+            </div>
+            <div id="balance">Balance: <span id="coin-balance">0</span></div>
+            <button id="playBtn">Play</button>
+            <button id="farmingBtn">Farming</button>
+        </div>
+
+        <!-- Game Page -->
+        <div id="game" class="page">
+            <div id="game-timer">00:20</div>
+            <div id="game-score">0</div>
+            <div id="game-area"></div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div id="nav-tabs">
+            <button data-page="main">Home</button>
+            <button data-page="tasks">Tasks</button>
+            <button data-page="frens">Frens</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
