@@ -53,3 +53,13 @@ body {
     left: 10px;
     color: white;
 }
+
+#friends-list {
+    list-style: none;
+    padding: 0;
+}
+
+#friends-list li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}

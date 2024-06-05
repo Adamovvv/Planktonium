@@ -8,12 +8,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let user = {
         username: '',
-        balance: 0
+        balance: 0,
+        friends: []
     };
 
     const showPage = (pageId) => {
         pages.forEach(page => page.classList.remove('active'));
         document.getElementById(pageId).classList.add('active');
+
+        if (pageId === 'frens') {
+            updateFriendsList();
+            document.getElementById('referral').textContent = `https://t.me/your_bot?start=${user.username}`;
+        }
+    };
+
+    const updateFriendsList = () => {
+        const friendsList = document.getElementById('friends-list');
+        friendsList.innerHTML = '';
+
+        user.friends.forEach(friend => {
+            const li = document.createElement('li');
+            li.textContent = friend;
+            friendsList.appendChild(li);
+        });
     };
 
     const startGame = () => {
@@ -51,7 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (username) {
             user.username = username;
             document.getElementById('user-name').textContent = username;
-            // Get user avatar from Telegram API and set to user-avatar
+            // Get user avatar from Telegram API and set to user-avatar (Mock example)
+            document.getElementById('user-avatar').src = `https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUserProfilePhotos?user_id=<USER_ID>`;
             showPage('main');
         }
     });
