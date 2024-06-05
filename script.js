@@ -2,19 +2,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    const ADMIN_ID = 'your_admin_id';  // Замените на ID администратора
+    const ADMIN_ID = '7065197387';  // Замените на ID администратора
 
     const urlParams = new URLSearchParams(window.location.search);
     const inviteCode = urlParams.get('user');
 
     const user = tg.initDataUnsafe.user;
 
-    if (!inviteCode && user?.id !== ADMIN_ID) {
+    if (!inviteCode && (!user || user.id.toString() !== ADMIN_ID)) {
         window.location.href = 'error.html';
         return;
     }
 
-    if (user && user.id === ADMIN_ID) {
+    if (user && user.id.toString() === ADMIN_ID) {
         showMainContent();
         return;
     }
@@ -34,6 +34,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const usernameElem = document.getElementById('username');
         if (user.username) {
             usernameElem.innerText = user.username;
+        }
+
+        if (user.photo_url) {
+            userAvatarElem.style.backgroundImage = `url(${user.photo_url})`;
         }
 
         let coinCount = parseInt(localStorage.getItem('coinCount')) || 0;
@@ -73,8 +77,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const gameCoinCountElem = document.getElementById('game-coin-count');
         const referralLinkElem = document.getElementById('referral-link');
         const invitedUsersListElem = document.getElementById('invited-users-list');
-        const copyLinkButton = document.getElementById('copy-link-button');
-        const shareLinkButton = document.getElementById('share-link-button');
+        const inviteButton = document.getElementById('invite-button');
+        const modal = document.getElementById('modal');
+        const modalCloseButton = document.getElementById('modal-close-button');
+        const modalCopyButton = document.getElementById('modal-copy-button');
+        const modalSendButton = document.getElementById('modal-send-button');
 
         if (coinCountElem) coinCountElem.innerText = coinCount;
         if (attemptsCountElem) attemptsCountElem.innerText = attemptsCount;
@@ -104,6 +111,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (playButton) playButton.addEventListener('click', startGame);
         if (farmingButton) farmingButton.addEventListener('click', startFarming);
+        if (inviteButton) inviteButton.addEventListener('click', openModal);
+        if (modalCloseButton) modalCloseButton.addEventListener('click', closeModal);
+        if (modalCopyButton) modalCopyButton.addEventListener('click', copyReferralLink);
+        if (modalSendButton) modalSendButton.addEventListener('click', sendReferralLink);
 
         function startGame() {
             if (attemptsCount > 0) {
@@ -132,7 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             coinCount += gameCoinCount;
                             coinCountElem.innerText = coinCount;
                             localStorage.setItem('coinCount', coinCount);
-                            alert(`Game Over! You collected ${gameCoinCount} coins.`);
+                            showEndGameModal(gameCoinCount, attemptsCount);
                         }
                     }
                 }, 1000);
@@ -296,26 +307,38 @@ document.addEventListener("DOMContentLoaded", () => {
             alert('Link copied to clipboard');
         }
 
-        if (copyLinkButton) {
-            copyLinkButton.addEventListener('click', () => {
-                copyToClipboard(userReferralLink);
-            });
+        function openModal() {
+            modal.classList.remove('hidden');
         }
 
-        if (shareLinkButton) {
-            shareLinkButton.addEventListener('click', () => {
-                if (navigator.share) {
-                    navigator.share({
-                        title: 'Join the Arcancoin Game!',
-                        text: 'Check out this amazing game and earn rewards!',
-                        url: userReferralLink
-                    }).catch(error => {
-                        console.error('Error sharing:', error);
-                    });
-                } else {
-                    alert('Sharing not supported on this browser');
-                }
+        function closeModal() {
+            modal.classList.add('hidden');
+        }
+
+        function copyReferralLink() {
+            copyToClipboard(userReferralLink);
+        }
+
+        function sendReferralLink() {
+            // Логика для отправки ссылки может быть добавлена здесь
+            alert('Referral link sent!');
+        }
+
+        function showEndGameModal(coins, attempts) {
+            const endGameModal = document.getElementById('end-game-modal');
+            const endGameCoinsElem = document.getElementById('end-game-coins');
+            const endGameAttemptsElem = document.getElementById('end-game-attempts');
+            const endGamePlayAgainButton = document.getElementById('end-game-play-again');
+
+            endGameCoinsElem.innerText = coins;
+            endGameAttemptsElem.innerText = attempts;
+
+            endGamePlayAgainButton.addEventListener('click', () => {
+                endGameModal.classList.add('hidden');
+                startGame();
             });
+
+            endGameModal.classList.remove('hidden');
         }
     }
 });

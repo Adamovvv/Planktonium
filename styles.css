@@ -131,17 +131,17 @@ main {
     display: flex;
     align-items: center;
     gap: 5px;
-    font-size: 54pt;
+    font-size: 54px;
     font-family: inherit;
 }
 .coin-counter svg {
-    width: 60px;
+    width: 50px;
 }
 .rjaexqox {
     width: 100%;
     display: flex;
     flex-direction: column;
-    border: 1px solid #fff;
+    border: 2px solid #1c1b1b;
     border-radius: 16px;
 }
 .izbxmkmr {
@@ -161,7 +161,7 @@ main {
 #farming-button {
     width: 100%;
     border-radius: 8px;
-    padding: 20px 15px;
+    padding: 15px;
     border: none;
 }
 #farming-info {
@@ -215,23 +215,14 @@ main {
     font-size: 14px;
     font-weight: bold;
 }
-#copy-link-button {
-    padding: 8px 24px;
-    background: #fff;
-    color: #000;
+#invite-button {
+    width: 100%;
+    padding: 15px;
     border: none;
-    border-radius: 2rem;
-    font-size: 12pt;
+    border-radius: 8px;
+    font-size: 18px;
     font-weight: bold;
-}
-#share-link-button {
-    padding: 8px 24px;
-    background: #fff;
-    color: #000;
-    border: none;
-    border-radius: 2rem;
-    font-size: 12pt;
-    font-weight: bold;
+    margin-bottom: 15px;
 }
 .mxaeddpm {
     display: flex;
@@ -249,13 +240,14 @@ main {
     border-radius: 100%;
     background-size: cover;
     background-position: center;
+    background-color: #fff;
     margin: auto;
 }
 
 .username {
     display: flex;
     margin: auto;
-    font-size: 18px;
+    font-size: 24px;
     font-weight: bold;
 }
 .wihbncri {
@@ -294,7 +286,6 @@ main {
     display: grid;
     gap: 15px;
     margin-top: 30px;
-    margin-bottom: 15px;
 }
 .isfhdhuf {
     margin: auto;
@@ -311,9 +302,9 @@ main {
 .claim {
     display: flex;
     flex-direction: column;
-    padding: 15px 0;
+    padding: 30px 0;
     gap: 15px;
-    border: 1px solid #fff;
+    border: 2px solid #1c1b1b;
     border-radius: 8px;
     font-size: 24px;
     align-items: center;
@@ -325,8 +316,8 @@ main {
     padding: 8px 24px;
     border: none;
     border-radius: 2rem;
-    background: #5b5b5b;
-    color: #bdbdbd;
+    background: #1c1b1b;
+    color: #6d6c6c;
     font-size: 14px;
     font-weight: bold;
 }
@@ -338,4 +329,79 @@ main {
     border-radius: 2rem;
     font-size: 12pt;
     font-weight: bold;
+}
+#registration-form {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    text-align: center;
+}
+#error-message {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    margin: auto;
+    text-align: center;
+}
+.quurwxkj {
+    width: 100%;
+    display: grid;
+    gap: 40px;
+    margin-bottom: 15px;
+}
+.xovubbfi {
+    display: flex;
+    margin: auto;
+}
+.frens-counter {
+    font-size: 18px;
+    font-weight: bold;
+}
+/* Добавьте эти стили в ваш styles.css */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    display: none;
+    background: white;
+    color: black;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.close-button {
+    align-self: flex-end;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+#modal-copy-button,
+#modal-send-button,
+#play-again-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #1c1b1b;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#modal-copy-button:hover,
+#modal-send-button:hover,
+#play-again-button:hover {
+    background: #333;
 }
