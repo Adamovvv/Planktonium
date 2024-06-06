@@ -1,86 +1,111 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const app = document.getElementById('app');
-    const pages = document.querySelectorAll('.page');
-    const navTabs = document.getElementById('nav-tabs');
-    const registerBtn = document.getElementById('registerBtn');
-    const playBtn = document.getElementById('playBtn');
-    const farmingBtn = document.getElementById('farmingBtn');
-
-    let user = {
-        username: '',
-        balance: 0,
-        friends: []
-    };
-
-    const showPage = (pageId) => {
-        pages.forEach(page => page.classList.remove('active'));
-        document.getElementById(pageId).classList.add('active');
-
-        if (pageId === 'frens') {
-            updateFriendsList();
-            document.getElementById('referral').textContent = `https://t.me/your_bot?start=${user.username}`;
-        }
-    };
-
-    const updateFriendsList = () => {
-        const friendsList = document.getElementById('friends-list');
-        friendsList.innerHTML = '';
-
-        user.friends.forEach(friend => {
-            const li = document.createElement('li');
-            li.textContent = friend;
-            friendsList.appendChild(li);
-        });
-    };
-
-    const startGame = () => {
-        const gameArea = document.getElementById('game-area');
-        const timerElement = document.getElementById('game-timer');
-        const scoreElement = document.getElementById('game-score');
-
-        let timeLeft = 20;
-        let score = 0;
-
-        const updateTimer = () => {
-            timerElement.textContent = `00:${timeLeft < 10 ? '0' : ''}${timeLeft}`;
-            if (timeLeft > 0) {
-                timeLeft--;
-            } else {
-                clearInterval(gameInterval);
-            }
-        };
-
-        const gameInterval = setInterval(updateTimer, 1000);
-
-        gameArea.innerHTML = ''; // Clear game area
-
-        // Game logic for falling elements...
-    };
-
-    navTabs.addEventListener('click', (e) => {
-        if (e.target.tagName === 'BUTTON') {
-            showPage(e.target.dataset.page);
-        }
-    });
-
-    registerBtn.addEventListener('click', () => {
-        const username = document.getElementById('username').value;
-        if (username) {
-            user.username = username;
-            document.getElementById('user-name').textContent = username;
-            // Get user avatar from Telegram API and set to user-avatar (Mock example)
-            document.getElementById('user-avatar').src = `https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUserProfilePhotos?user_id=<USER_ID>`;
-            showPage('main');
-        }
-    });
-
-    playBtn.addEventListener('click', startGame);
-
-    farmingBtn.addEventListener('click', () => {
-        user.balance += 57600;
-        document.getElementById('coin-balance').textContent = user.balance;
-    });
-
-    // Initialize the app with the registration page
-    showPage('registration');
+    if (localStorage.getItem('username')) {
+        showMain();
+    } else {
+        showRegister();
+    }
 });
+
+function showRegister() {
+    document.getElementById('register').classList.remove('hidden');
+    document.getElementById('main').classList.add('hidden');
+}
+
+function showMain() {
+    const username = localStorage.getItem('username');
+    const balance = localStorage.getItem('balance') || 0;
+    const tickets = localStorage.getItem('tickets') || 3;
+    const farmingBalance = localStorage.getItem('farmingBalance') || '0.000';
+    const farmingTimer = localStorage.getItem('farmingTimer') || 28800; // 8 hours in seconds
+
+    document.getElementById('displayUsername').textContent = username;
+    document.getElementById('balance').textContent = balance;
+    document.getElementById('tickets').textContent = tickets;
+    document.getElementById('farmingBalance').textContent = farmingBalance;
+    document.getElementById('farmingTimer').textContent = formatTime(farmingTimer);
+
+    document.getElementById('register').classList.add('hidden');
+    document.getElementById('main').classList.remove('hidden');
+}
+
+function registerUser() {
+    const username = document.getElementById('username').value;
+    if (username) {
+        localStorage.setItem('username', username);
+        localStorage.setItem('balance', 0);
+        localStorage.setItem('tickets', 3);
+        localStorage.setItem('farmingBalance', '0.000');
+        localStorage.setItem('farmingTimer', 28800); // 8 hours in seconds
+        showMain();
+    }
+}
+
+function startGame() {
+    let tickets = localStorage.getItem('tickets');
+    if (tickets > 0) {
+        localStorage.setItem('tickets', tickets - 1);
+        window.location.href = 'game.html';
+    } else {
+        alert('No tickets left. Please wait for ticket regeneration.');
+    }
+}
+
+function startFarming() {
+    let farmingTimer = parseInt(localStorage.getItem('farmingTimer'));
+    if (farmingTimer >= 28800) { // 8 hours in seconds
+        farmingTimer = 0;
+        localStorage.setItem('farmingTimer', farmingTimer);
+        localStorage.setItem('farmingBalance', '0.000');
+        updateFarmingBalance();
+    } else {
+        alert('Farming in progress. Please wait for the timer to reset.');
+    }
+}
+
+function updateFarmingBalance() {
+    let farmingTimer = parseInt(localStorage.getItem('farmingTimer'));
+    let farmingBalance = (57600 * (farmingTimer / 28800)).toFixed(3);
+    document.getElementById('farmingBalance').textContent = farmingBalance;
+}
+
+function formatTime(seconds) {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+}
+
+setInterval(() => {
+    let farmingTimer = parseInt(localStorage.getItem('farmingTimer'));
+    if (farmingTimer < 28800) {
+        farmingTimer++;
+        localStorage.setItem('farmingTimer', farmingTimer);
+        document.getElementById('farmingTimer').textContent = formatTime(farmingTimer);
+        updateFarmingBalance();
+    }
+}, 1000);
+
+function completeFarming() {
+    let farmingTimer = parseInt(localStorage.getItem('farmingTimer'));
+    if (farmingTimer >= 28800) {
+        let balance = parseInt(localStorage.getItem('balance')) || 0;
+        balance += 57600;
+        localStorage.setItem('balance', balance);
+        document.getElementById('balance').textContent = balance;
+        localStorage.setItem('farmingTimer', 0); // Reset to 0
+        localStorage.setItem('farmingBalance', '0.000');
+    }
+}
+
+// Вызываем completeFarming() в конце setInterval, чтобы завершить фарминг
+setInterval(() => {
+    let farmingTimer = parseInt(localStorage.getItem('farmingTimer'));
+    if (farmingTimer < 28800) {
+        farmingTimer++;
+        localStorage.setItem('farmingTimer', farmingTimer);
+        document.getElementById('farmingTimer').textContent = formatTime(farmingTimer);
+        updateFarmingBalance();
+    } else {
+        completeFarming();
+    }
+}, 1000);
