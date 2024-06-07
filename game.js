@@ -8,7 +8,9 @@ function initGame() {
     const scoreElem = document.getElementById('score');
     let gameTime = 20;
     let score = 0;
-    let interval;
+    let gameInterval;
+    let elementInterval;
+    let isFrozen = false;
 
     gameArea.innerHTML = '';
     gameTimerElem.textContent = gameTime;
@@ -16,73 +18,82 @@ function initGame() {
 
     const gameObjects = [];
 
-    interval = setInterval(() => {
-        if (gameTime > 0) {
-            gameTime--;
-            gameTimerElem.textContent = gameTime;
-
-            const div = document.createElement('div');
-            if (Math.random() < 0.05) {
-                div.className = 'freeze';
-            } else if (Math.random() < 0.05) {
-                div.className = 'bomb';
-            } else {
-                div.className = 'coin';
-            }
-            div.style.left = Math.random() * 90 + '%';
-            div.style.top = 0;
-            div.style.position = 'absolute';
-            gameArea.appendChild(div);
-            gameObjects.push(div);
-
-            gameObjects.forEach((obj, index) => {
-                const top = parseInt(obj.style.top);
-                if (top < gameArea.clientHeight) {
-                    obj.style.top = top + 10 + 'px'; // Увеличенная скорость падения
+    // Таймер игры
+    function startGameTimer() {
+        gameInterval = setInterval(() => {
+            if (!isFrozen) {
+                if (gameTime > 0) {
+                    gameTime--;
+                    gameTimerElem.textContent = gameTime;
                 } else {
-                    gameArea.removeChild(obj);
-                    gameObjects.splice(index, 1);
+                    clearInterval(gameInterval);
+                    clearInterval(elementInterval);
+                    endGame(score);
                 }
-            });
-        } else {
-            clearInterval(interval);
-            endGame(score);
-        }
-    }, 500); // Увеличенная частота интервала
+            }
+        }, 1000);
+    }
+
+    // Создание элементов
+    function startElementCreation() {
+        elementInterval = setInterval(() => {
+            if (!isFrozen) {
+                createGameElement(gameArea, gameObjects);
+            }
+        }, 150); // Интервал создания новых элементов
+    }
+
+    startGameTimer();
+    startElementCreation();
 
     gameArea.addEventListener('click', (event) => {
-        if (event.target.className === 'coin') {
+        if (event.target.classList.contains('coin')) {
             score += 1;
             scoreElem.textContent = score;
             gameArea.removeChild(event.target);
-        } else if (event.target.className === 'freeze') {
-            clearInterval(interval);
+        } else if (event.target.classList.contains('freeze')) {
+            isFrozen = true;
+            gameObjects.forEach((obj) => {
+                obj.style.animationPlayState = 'paused';
+            });
             setTimeout(() => {
-                interval = setInterval(() => {
-                    if (gameTime > 0) {
-                        gameTime--;
-                        gameTimerElem.textContent = gameTime;
-
-                        gameObjects.forEach((obj, index) => {
-                            const top = parseInt(obj.style.top);
-                            if (top < gameArea.clientHeight) {
-                                obj.style.top = top + 10 + 'px'; // Увеличенная скорость падения
-                            } else {
-                                gameArea.removeChild(obj);
-                                gameObjects.splice(index, 1);
-                            }
-                        });
-                    } else {
-                        clearInterval(interval);
-                        endGame(score);
-                    }
-                }, 500); // Увеличенная частота интервала
+                isFrozen = false;
+                gameObjects.forEach((obj) => {
+                    obj.style.animationPlayState = 'running';
+                });
             }, 2000);
-        } else if (event.target.className === 'bomb') {
+            gameArea.removeChild(event.target);
+        } else if (event.target.classList.contains('bomb')) {
             score -= 20;
             if (score < 0) score = 0;
             scoreElem.textContent = score;
             gameArea.removeChild(event.target);
+        }
+    });
+}
+
+function createGameElement(gameArea, gameObjects) {
+    const div = document.createElement('div');
+    const size = Math.random() * 10 + 30; // Размер от 25px до 30px
+    div.style.width = size + 'px';
+    div.style.height = size + 'px';
+    if (Math.random() < 0.05) {
+        div.className = 'freeze falling';
+    } else if (Math.random() < 0.05) {
+        div.className = 'bomb falling';
+    } else {
+        div.className = 'coin falling';
+    }
+    div.style.left = Math.random() * 90 + '%';
+    gameArea.appendChild(div);
+    gameObjects.push(div);
+
+    // Удаление объектов после завершения анимации
+    div.addEventListener('animationend', () => {
+        gameArea.removeChild(div);
+        const index = gameObjects.indexOf(div);
+        if (index > -1) {
+            gameObjects.splice(index, 1);
         }
     });
 }
