@@ -6,7 +6,7 @@ function initGame() {
     const gameArea = document.getElementById('gameArea');
     const gameTimerElem = document.getElementById('gameTimer');
     const scoreElem = document.getElementById('score');
-    let gameTime = 30;
+    let gameTime = 1;
     let score = 0;
     let gameInterval;
     let elementInterval;
@@ -107,6 +107,6 @@ function endGame(score) {
 
 function showPlayAgainWindow(score) {
     const playAgainWindow = document.getElementById('playAgainWindow');
-    document.getElementById('finalScore').textContent = `Your score: ${score}`;
+    document.getElementById('finalScore').textContent = `${score}`;
     playAgainWindow.classList.remove('hidden');
 }

@@ -71,6 +71,9 @@ body {
     flex-direction: column;
     justify-content: space-between;
 }
+.grid {
+    display: grid;
+}
 
 .hidden {
     display: none;
@@ -87,6 +90,10 @@ body {
 #gameArea {
     width: 100%;
     height: 100vh;
+    background: url(game.svg);
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: 100% auto;
     position: relative;
     overflow: hidden;
 }
@@ -121,7 +128,7 @@ body {
 }
 .farming-btn {
     max-width: 700px;
-    position: fixed;
+    position: absolute;
     padding: 16px;
     right: 0;
     left: 0;
@@ -170,7 +177,6 @@ body {
     border-radius: 12px;
     background-image: url(drop.svg);
     background-position: 50%;
-    background-repeat: no-repeat;
     background-size: 100% auto;
     position: relative;
 }
@@ -243,16 +249,29 @@ body {
     animation-play-state: running;
 }
 #gameTimer {
-    border: 1px solid gold;
-    border-radius: 2rem;
-    padding: 5px 25px;
-    font-size: 20px;
-    font-weight: bold;
-    color: gold;
+    border: 2px solid rgba(234, 212, 12, .302);
+    color: #ead40c;
+    border-radius: 100px;
+    padding: 3px 14px;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 32px;
+}
+.points {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 52px;
+    transition: all .1s ease;
+    transition-property: transform,color;
+}
+.points svg {
+    width: 38px;
+    height: 38px;
 }
 #score {
     font-size: 40px;
-    font-weight: bold;
+    font-weight: 700;
 }
 .profile-with-balance {
     display: flex;
@@ -284,6 +303,8 @@ body {
     display: flex;
     flex-direction: column;
     height: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
 }
 .end-game-content {
     display: flex;
@@ -292,19 +313,46 @@ body {
     align-items: center;
     justify-content: center;
 }
+.end-game-content img {
+    width: 128px;
+    height: 128px;
+}
+.end-game-content .message {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 32px;
+    margin-top: 32px;
+    text-align: center;
+}
+.reward {
+    margin-top: 26px;
+    margin-bottom: 26px;
+}
+.end-game-content .value {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+.end-game-content .value svg {
+    width: 38px;
+    height: 38px;
+}
+#finalScore {
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 52px;
+}
+.reward-description {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    margin-top: 6px;
+}
 .end-game-buttons {
     display: flex;
     flex-direction: column;
     gap: 12px;
     margin-top: auto;
-}
-
-.play-again-content h2 {
-    margin-bottom: 20px;
-}
-
-.play-again-content p {
-    margin-bottom: 20px;
 }
 .kit-button {
     align-items: center;
@@ -327,16 +375,21 @@ body {
     vertical-align: middle;
     will-change: color,background;
 }
+.kit-button span {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 24px;
+}
 .is-large {
     border-radius: 8px;
     height: 56px;
     padding: 0 20px;
 }
-.kit-button .is-secondary {
+.is-secondary {
     background: #1c1c1e;
     color: #fff;
 }
-.kit-button .is-primary {
+.is-primary {
     background: #fff;
     color: #000;
 }
