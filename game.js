@@ -6,7 +6,7 @@ function initGame() {
     const gameArea = document.getElementById('gameArea');
     const gameTimerElem = document.getElementById('gameTimer');
     const scoreElem = document.getElementById('score');
-    let gameTime = 20;
+    let gameTime = 30;
     let score = 0;
     let gameInterval;
     let elementInterval;
@@ -74,7 +74,7 @@ function initGame() {
 
 function createGameElement(gameArea, gameObjects) {
     const div = document.createElement('div');
-    const size = Math.random() * 10 + 30; // Размер от 25px до 30px
+    const size = Math.random() * 5 + 30; // Размер от 30px до 35px
     div.style.width = size + 'px';
     div.style.height = size + 'px';
     if (Math.random() < 0.05) {
@@ -102,5 +102,11 @@ function endGame(score) {
     let balance = parseInt(localStorage.getItem('balance')) || 0;
     balance += score;
     localStorage.setItem('balance', balance);
-    window.location.href = 'index.html'; // Перенаправление на главную страницу после завершения игры
+    showPlayAgainWindow(score);
+}
+
+function showPlayAgainWindow(score) {
+    const playAgainWindow = document.getElementById('playAgainWindow');
+    document.getElementById('finalScore').textContent = `Your score: ${score}`;
+    playAgainWindow.classList.remove('hidden');
 }

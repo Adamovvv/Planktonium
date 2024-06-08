@@ -20,7 +20,7 @@ function showRegister() {
 function showMain() {
     const username = localStorage.getItem('username');
     const balance = localStorage.getItem('balance') || 0;
-    const tickets = localStorage.getItem('tickets') || 3;
+    const tickets = localStorage.getItem('tickets') || 30;
     const farmingBalance = localStorage.getItem('farmingBalance') || '0.000';
     const farmingTimer = localStorage.getItem('farmingTimer') || 0;
 
@@ -47,7 +47,7 @@ function registerUser() {
     if (username) {
         localStorage.setItem('username', username);
         localStorage.setItem('balance', 0);
-        localStorage.setItem('tickets', 3);
+        localStorage.setItem('tickets', 30);
         localStorage.setItem('farmingBalance', '0.000');
         localStorage.setItem('farmingTimer', 0);
         showMain();

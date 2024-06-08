@@ -16,6 +16,19 @@
             </div>
         </div>
     </div>
+    <!-- Добавляем HTML для окна "Играть снова" -->
+    <div id="playAgainWindow" class="play-again-window hidden">
+        <div class="play-again-content">
+            <div class="end-game-content">
+                <h2>Game Over</h2>
+                <p id="finalScore">Your score: 0</p>
+            </div>
+            <div class="end-game-buttons">
+                <button class="kit-button is-large is-secondary">Invite a fren for</button>
+                <button class="kit-button is-large is-primary" onclick="window.location.href='index.html'">Play Again</button>
+            </div>
+        </div>
+    </div>
     <script src="game.js"></script>
 </body>
 </html>

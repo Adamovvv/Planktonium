@@ -270,3 +270,76 @@ body {
     line-height: 32px;
     margin-top: 16px;
 }
+.play-again-window {
+    position: absolute;
+    width: 100%;
+    height: calc(100dvh + 1px);
+    background: #000;
+    z-index: 1000;
+    padding-bottom: calc(24px + var(--lvh, 100vh) - var(--tg-viewport-height, 100vh));
+    padding-top: 24px;
+}
+
+.play-again-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.end-game-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+}
+.end-game-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: auto;
+}
+
+.play-again-content h2 {
+    margin-bottom: 20px;
+}
+
+.play-again-content p {
+    margin-bottom: 20px;
+}
+.kit-button {
+    align-items: center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    display: inline-flex;
+    flex-shrink: 0;
+    justify-content: center;
+    margin: 0;
+    outline: 0;
+    overflow: hidden;
+    padding: 0;
+    position: relative;
+    text-decoration: none;
+    transition: all .2s ease;
+    transition-property: color,background;
+    vertical-align: middle;
+    will-change: color,background;
+}
+.is-large {
+    border-radius: 8px;
+    height: 56px;
+    padding: 0 20px;
+}
+.kit-button .is-secondary {
+    background: #1c1c1e;
+    color: #fff;
+}
+.kit-button .is-primary {
+    background: #fff;
+    color: #000;
+}
+.hidden {
+    display: none;
+}
