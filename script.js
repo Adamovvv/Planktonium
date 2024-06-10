@@ -80,12 +80,12 @@ async function registerUser() {
  */
 async function fetchTelegramAvatar(username) {
     try {
-        const response = await fetch(`https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUserProfilePhotos?user_id=${username}`);
+        const response = await fetch(`https://api.telegram.org/bot7233630925:AAHTt9SvnW4oN1Fwc9_6U0mU9r87CCtuWrs/getUserProfilePhotos?user_id=${username}`);
         const data = await response.json();
         if (data.ok && data.result.photos.length > 0) {
             const photos = data.result.photos[0];
             const photo = photos[photos.length - 1];
-            return `https://api.telegram.org/file/bot<YOUR_BOT_TOKEN>/${photo.file_path}`;
+            return `https://api.telegram.org/file/bot7233630925:AAHTt9SvnW4oN1Fwc9_6U0mU9r87CCtuWrs/${photo.file_path}`;
         }
     } catch (error) {
         console.error('Error fetching avatar:', error);

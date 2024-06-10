@@ -74,7 +74,7 @@ function initGame() {
 
 function createGameElement(gameArea, gameObjects) {
     const div = document.createElement('div');
-    const size = Math.random() * 5 + 30; // Размер от 30px до 35px
+    const size = Math.random() * 5 + 35; // Размер от 30px до 35px
     div.style.width = size + 'px';
     div.style.height = size + 'px';
     if (Math.random() < 0.05) {
@@ -96,33 +96,6 @@ function createGameElement(gameArea, gameObjects) {
             gameObjects.splice(index, 1);
         }
     });
-}
-
-function handleElementClick(element, scoreChange, isFreeze = false) {
-    navigator.vibrate(100); // Вибрация на 100 мс
-    const gameArea = document.getElementById('gameArea');
-    const scoreElem = document.getElementById('score');
-    let score = parseInt(scoreElem.textContent);
-
-    if (isFreeze) {
-        isFrozen = true;
-        const gameObjects = Array.from(document.getElementsByClassName('falling'));
-        gameObjects.forEach((obj) => {
-            obj.style.animationPlayState = 'paused';
-        });
-        setTimeout(() => {
-            isFrozen = false;
-            gameObjects.forEach((obj) => {
-                obj.style.animationPlayState = 'running';
-            });
-        }, 2000);
-    } else {
-        score += scoreChange;
-        if (score < 0) score = 0;
-        scoreElem.textContent = score;
-    }
-
-    gameArea.removeChild(element);
 }
 
 function endGame(score) {
