@@ -48,11 +48,26 @@ function initGame() {
 
     gameArea.addEventListener('click', (event) => {
         if (event.target.classList.contains('coin')) {
-            handleElementClick(event.target, 1);
+            score += 1;
+            scoreElem.textContent = score;
+            gameArea.removeChild(event.target);
         } else if (event.target.classList.contains('freeze')) {
-            handleElementClick(event.target, 0, true);
+            isFrozen = true;
+            gameObjects.forEach((obj) => {
+                obj.style.animationPlayState = 'paused';
+            });
+            setTimeout(() => {
+                isFrozen = false;
+                gameObjects.forEach((obj) => {
+                    obj.style.animationPlayState = 'running';
+                });
+            }, 2000);
+            gameArea.removeChild(event.target);
         } else if (event.target.classList.contains('bomb')) {
-            handleElementClick(event.target, -20);
+            score -= 20;
+            if (score < 0) score = 0;
+            scoreElem.textContent = score;
+            gameArea.removeChild(event.target);
         }
     });
 }
@@ -90,11 +105,13 @@ function handleElementClick(element, scoreChange, isFreeze = false) {
     let score = parseInt(scoreElem.textContent);
 
     if (isFreeze) {
+        isFrozen = true;
         const gameObjects = Array.from(document.getElementsByClassName('falling'));
         gameObjects.forEach((obj) => {
             obj.style.animationPlayState = 'paused';
         });
         setTimeout(() => {
+            isFrozen = false;
             gameObjects.forEach((obj) => {
                 obj.style.animationPlayState = 'running';
             });
