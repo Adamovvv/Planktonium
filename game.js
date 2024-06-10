@@ -6,7 +6,7 @@ function initGame() {
     const gameArea = document.getElementById('gameArea');
     const gameTimerElem = document.getElementById('gameTimer');
     const scoreElem = document.getElementById('score');
-    let gameTime = 1;
+    let gameTime = 20;
     let score = 0;
     let gameInterval;
     let elementInterval;
@@ -48,26 +48,11 @@ function initGame() {
 
     gameArea.addEventListener('click', (event) => {
         if (event.target.classList.contains('coin')) {
-            score += 1;
-            scoreElem.textContent = score;
-            gameArea.removeChild(event.target);
+            handleElementClick(event.target, 1);
         } else if (event.target.classList.contains('freeze')) {
-            isFrozen = true;
-            gameObjects.forEach((obj) => {
-                obj.style.animationPlayState = 'paused';
-            });
-            setTimeout(() => {
-                isFrozen = false;
-                gameObjects.forEach((obj) => {
-                    obj.style.animationPlayState = 'running';
-                });
-            }, 2000);
-            gameArea.removeChild(event.target);
+            handleElementClick(event.target, 0, true);
         } else if (event.target.classList.contains('bomb')) {
-            score -= 20;
-            if (score < 0) score = 0;
-            scoreElem.textContent = score;
-            gameArea.removeChild(event.target);
+            handleElementClick(event.target, -20);
         }
     });
 }
@@ -96,6 +81,31 @@ function createGameElement(gameArea, gameObjects) {
             gameObjects.splice(index, 1);
         }
     });
+}
+
+function handleElementClick(element, scoreChange, isFreeze = false) {
+    navigator.vibrate(100); // Вибрация на 100 мс
+    const gameArea = document.getElementById('gameArea');
+    const scoreElem = document.getElementById('score');
+    let score = parseInt(scoreElem.textContent);
+
+    if (isFreeze) {
+        const gameObjects = Array.from(document.getElementsByClassName('falling'));
+        gameObjects.forEach((obj) => {
+            obj.style.animationPlayState = 'paused';
+        });
+        setTimeout(() => {
+            gameObjects.forEach((obj) => {
+                obj.style.animationPlayState = 'running';
+            });
+        }, 2000);
+    } else {
+        score += scoreChange;
+        if (score < 0) score = 0;
+        scoreElem.textContent = score;
+    }
+
+    gameArea.removeChild(element);
 }
 
 function endGame(score) {
