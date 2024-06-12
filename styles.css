@@ -137,6 +137,13 @@ body {
     background-size: cover;
 }
 
+/* Добавить стили для элементов при нажатии */
+.coin.clicked,
+.freeze.clicked,
+.bomb.clicked {
+    transform: scale(0.9);
+    transition: transform 0.1s ease;
+}
 .farming-btn {
     max-width: 700px;
     position: absolute;
@@ -261,10 +268,10 @@ body {
 
 @keyframes fall {
     0% {
-        top: 0;
+        top: -50px;
     }
     100% {
-        top: 100vh;
+        top: 100%;
     }
 }
 
@@ -328,7 +335,6 @@ body {
     background: #000;
     z-index: 1000;
     padding-bottom: calc(24px + var(--lvh, 100vh) - var(--tg-viewport-height, 100vh));
-    padding-top: 24px;
 }
 
 .play-again-content {

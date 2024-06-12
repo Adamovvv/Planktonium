@@ -18,7 +18,6 @@ function initGame() {
 
     const gameObjects = [];
 
-    // Таймер игры
     function startGameTimer() {
         gameInterval = setInterval(() => {
             if (!isFrozen) {
@@ -34,13 +33,12 @@ function initGame() {
         }, 1000);
     }
 
-    // Создание элементов
     function startElementCreation() {
         elementInterval = setInterval(() => {
             if (!isFrozen) {
                 createGameElement(gameArea, gameObjects);
             }
-        }, 150); // Интервал создания новых элементов
+        }, 150);
     }
 
     startGameTimer();
@@ -50,48 +48,80 @@ function initGame() {
         if (event.target.classList.contains('coin')) {
             score += 1;
             scoreElem.textContent = score;
-            gameArea.removeChild(event.target);
+            removeElement(event.target.parentNode);
+            navigator.vibrate(100); // Вибрация при сборе монеты
         } else if (event.target.classList.contains('freeze')) {
-            isFrozen = true;
-            gameObjects.forEach((obj) => {
-                obj.style.animationPlayState = 'paused';
-            });
-            setTimeout(() => {
-                isFrozen = false;
-                gameObjects.forEach((obj) => {
-                    obj.style.animationPlayState = 'running';
-                });
-            }, 2000);
-            gameArea.removeChild(event.target);
+            freezeGame();
+            removeElement(event.target.parentNode);
+            navigator.vibrate(200); // Вибрация при сборе заморозки
         } else if (event.target.classList.contains('bomb')) {
             score -= 20;
             if (score < 0) score = 0;
             scoreElem.textContent = score;
-            gameArea.removeChild(event.target);
+            removeElement(event.target.parentNode);
+            navigator.vibrate(300); // Вибрация при сборе бомбы
         }
     });
+
+    function freezeGame() {
+        isFrozen = true;
+        gameObjects.forEach((obj) => {
+            obj.style.animationPlayState = 'paused';
+        });
+        setTimeout(() => {
+            isFrozen = false;
+            gameObjects.forEach((obj) => {
+                obj.style.animationPlayState = 'running';
+            });
+        }, 2000);
+    }
+
+    function removeElement(containerDiv) {
+        gameArea.removeChild(containerDiv);
+        const index = gameObjects.indexOf(containerDiv);
+        if (index > -1) {
+            gameObjects.splice(index, 1);
+        }
+        containerDiv.classList.add('clicked');
+    }
 }
 
 function createGameElement(gameArea, gameObjects) {
-    const div = document.createElement('div');
-    const size = Math.random() * 5 + 35; // Размер от 30px до 35px
-    div.style.width = size + 'px';
-    div.style.height = size + 'px';
-    if (Math.random() < 0.05) {
-        div.className = 'freeze falling';
-    } else if (Math.random() < 0.05) {
-        div.className = 'bomb falling';
-    } else {
-        div.className = 'coin falling';
-    }
-    div.style.left = Math.random() * 90 + '%';
-    gameArea.appendChild(div);
-    gameObjects.push(div);
+    const elementSize = Math.random() * 10 + 35;
+    const containerSize = elementSize + 10;
 
-    // Удаление объектов после завершения анимации
-    div.addEventListener('animationend', () => {
-        gameArea.removeChild(div);
-        const index = gameObjects.indexOf(div);
+    const containerDiv = document.createElement('div');
+    containerDiv.style.width = containerSize + 'px';
+    containerDiv.style.height = containerSize + 'px';
+    containerDiv.style.position = 'absolute';
+    containerDiv.style.left = Math.random() * 90 + '%';
+    containerDiv.className = 'falling'; // Ensure the container has the falling animation
+
+    const elementDiv = document.createElement('div');
+    elementDiv.style.width = elementSize + 'px';
+    elementDiv.style.height = elementSize + 'px';
+    elementDiv.style.margin = 'auto';
+    elementDiv.style.position = 'relative';
+    elementDiv.style.top = '50%';
+    elementDiv.style.transform = 'translateY(-50%)';
+
+    if (Math.random() < 0.05) {
+        elementDiv.className = 'freeze';
+    } else if (Math.random() < 0.05) {
+        elementDiv.className = 'bomb';
+    } else {
+        elementDiv.className = 'coin';
+    }
+
+    containerDiv.appendChild(elementDiv);
+    gameArea.appendChild(containerDiv);
+    gameObjects.push(containerDiv);
+
+    containerDiv.addEventListener('animationend', () => {
+        if (containerDiv.parentNode) {
+            gameArea.removeChild(containerDiv);
+        }
+        const index = gameObjects.indexOf(containerDiv);
         if (index > -1) {
             gameObjects.splice(index, 1);
         }
