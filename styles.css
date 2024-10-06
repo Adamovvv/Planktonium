@@ -209,13 +209,13 @@ body {
 }
 
 .layout-tabs svg {
-    width: 24px;
+    width: 22px;
     color: #a6a6a6;
 }
 
 .drop-game {
     display: grid;
-    height: 144px;
+    height: 120px;
     padding: 16px 24px;
     margin-top: auto;
     background-color: #131313;
@@ -565,4 +565,23 @@ body {
     left: 44px;
     position: absolute;
     right: -16px;
+}
+.invite-btn {
+    max-width: 700px;
+    position: absolute;
+    padding: 16px;
+    right: 0;
+    left: 0;
+    bottom: calc(64px + var(--lvh, 100vh) - var(--tg-viewport-height, 100vh));
+}
+.invite-button {
+    width: 100%;
+    background-color: #fff;
+    color: #000;
+    height: 56px;
+    padding: 0 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
 }
