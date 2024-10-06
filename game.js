@@ -44,24 +44,27 @@ function initGame() {
     startGameTimer();
     startElementCreation();
 
-    gameArea.addEventListener('click', (event) => {
-        if (event.target.classList.contains('coin')) {
-            score += 1;
-            scoreElem.textContent = score;
-            removeElement(event.target.parentNode);
-            navigator.vibrate(100); // Вибрация при сборе монеты
-        } else if (event.target.classList.contains('freeze')) {
-            freezeGame();
-            removeElement(event.target.parentNode);
-            navigator.vibrate(200); // Вибрация при сборе заморозки
-        } else if (event.target.classList.contains('bomb')) {
-            score -= 20;
-            if (score < 0) score = 0;
-            scoreElem.textContent = score;
-            removeElement(event.target.parentNode);
-            navigator.vibrate(300); // Вибрация при сборе бомбы
-        }
-    });
+gameArea.addEventListener('click', handleElementClick);
+gameArea.addEventListener('touchstart', handleElementClick);
+
+function handleElementClick(event) {
+    if (event.target.classList.contains('coin')) {
+        score += 1;
+        scoreElem.textContent = score;
+        removeElement(event.target.parentNode);
+        navigator.vibrate(100);
+    } else if (event.target.classList.contains('freeze')) {
+        freezeGame();
+        removeElement(event.target.parentNode);
+        navigator.vibrate(200);
+    } else if (event.target.classList.contains('bomb')) {
+        score -= 20;
+        if (score < 0) score = 0;
+        scoreElem.textContent = score;
+        removeElement(event.target.parentNode);
+        navigator.vibrate(300);
+    }
+}
 
     function freezeGame() {
         isFrozen = true;
