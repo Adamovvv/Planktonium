@@ -167,3 +167,34 @@ function completeFarming() {
     localStorage.setItem('farmingTimer', 0); // Сбросить таймер до 0
     localStorage.setItem('farmingBalance', '0.000');
 }
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    createStars(50); // Генерация 100 звезд
+});
+
+function createStars(numStars) {
+    const starField = document.getElementById('star-field');
+
+    for (let i = 0; i < numStars; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+
+        // Случайная начальная позиция звезды
+        star.style.left = Math.random() * 100 + 'vw';
+        star.style.top = Math.random() * 100 + 'vh';
+
+        // Задаем случайные значения для перемещения по X и Y с помощью CSS-переменных
+        const randomX = (Math.random() * 200 - 100) + 'vw'; // От -100vw до 100vw
+        const randomY = (Math.random() * 200 - 100) + 'vh'; // От -100vh до 100vh
+        star.style.setProperty('--random-x', randomX);
+        star.style.setProperty('--random-y', randomY);
+
+        // Применение случайной продолжительности и задержки для анимации
+        star.style.animationDuration = Math.random() * 30 + 10 + 's'; // Длительность от 10 до 40 секунд
+        star.style.animationDelay = Math.random() * 5 + 's'; // Задержка от 0 до 5 секунд
+
+        starField.appendChild(star);
+    }
+}

@@ -584,3 +584,63 @@ body {
     font-size: 18px;
     font-weight: bold;
 }
+.frends {
+    height: 100%;
+}
+.friend {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #282828;
+}
+.friend img {
+    width: 40px;
+    height: 40px;
+    border-radius: 2rem;
+}
+.friend-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.friend-name {
+    font-size: 18px;
+    font-weight: bold;
+}
+.friend-balance {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+#star-field {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1; /* За игрой */
+}
+
+.star {
+    position: absolute;
+    width: 8px; /* Размер звезд можно изменить */
+    height: 8px;
+    background-image: url('star.png'); /* Путь к изображению звезды */
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.8;
+    animation: moveStar 20s linear infinite;
+}
+
+@keyframes moveStar {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(var(--random-x), var(--random-y)) scale(1.2);
+        opacity: 0.5;
+    }
+}
