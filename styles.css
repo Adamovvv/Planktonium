@@ -45,15 +45,14 @@ body {
 .main-info {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100%;
     padding: 16px;
-    padding-bottom: calc(88px + var(--lvh, 100vh) - var(--tg-viewport-height, 100vh));
+    padding-bottom: calc(170px + var(--lvh, 100vh) - var(--tg-viewport-height, 100vh));
 }
 .pages-index-index {
     display: flex;
     flex-direction: column;
     height: 100%;
-    padding-bottom: 88px;
 }
 
 .balance-div {
@@ -81,7 +80,6 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
 }
 
 .grid {
@@ -157,7 +155,7 @@ body {
     padding: 16px;
     right: 0;
     left: 0;
-    bottom: calc(64px + var(--lvh, 100vh) - var(--tg-viewport-height, 100vh));
+    bottom: calc(83px + var(--lvh, 100vh) - var(--tg-viewport-height, 100vh));
 }
 
 .farming-button {
@@ -198,12 +196,11 @@ body {
 }
 .layout-tabs {
     background: #000;
-    height: calc(64px + var(--lvh, 100vh) - var(--tg-viewport-height, 100vh));
+    height: calc(83px + var(--lvh, 100vh) - var(--tg-viewport-height, 100vh));
     justify-content: space-around;
     margin-left: auto;
     margin-right: auto;
     max-width: 700px;
-    padding-bottom: calc(var(--lvh, 100vh) - var(--tg-viewport-height, 100vh));
     padding-left: 16px;
     padding-right: 16px;
 }
