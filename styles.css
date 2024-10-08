@@ -5,7 +5,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100%;
     margin: 0;
 }
 
@@ -47,11 +47,11 @@ body {
     flex-direction: column;
     height: 100%;
     padding: 16px;
-    padding-bottom: calc(170px + var(--lvh, 100vh) - var(--tg-viewport-height, 100vh));
 }
 .pages-index-index {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     height: 100%;
 }
 
@@ -77,7 +77,7 @@ body {
 
 #app, #game {
     width: 100%;
-    height: 100%;
+    height: 100vh;
     display: flex;
     flex-direction: column;
 }
@@ -150,11 +150,7 @@ body {
 }
 .farming-btn {
     max-width: 700px;
-    position: absolute;
-    padding: 16px;
-    right: 0;
-    left: 0;
-    bottom: calc(83px + var(--lvh, 100vh) - var(--tg-viewport-height, 100vh));
+    margin-top: 16px;
 }
 
 .farming-button {
@@ -197,7 +193,7 @@ body {
 }
 .layout-tabs {
     background: #000;
-    height: calc(83px + var(--lvh, 100vh) - var(--tg-viewport-height, 100vh));
+    height: calc(83px + var(--lvh, 100vh) - var(--tg-viewport-height, 100%));
     justify-content: space-around;
     margin-left: auto;
     margin-right: auto;
@@ -210,7 +206,9 @@ body {
     width: 24px;
     color: #a6a6a6;
 }
-
+.drop-div {
+    margin-bottom: 83px;
+}
 .drop-game {
     display: grid;
     height: 120px;
@@ -334,7 +332,6 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 82px;
 }
 
 #displayUsername {
